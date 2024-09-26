@@ -3,6 +3,29 @@
 import Link from "next/link";
 
 export const Login = () => {
+  const url = "https://project-data-api.onrender.com/sign-in";
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    const user = {
+      email: e.target.email.value,
+      password: e.target.password.value,
+    };
+
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    };
+
+    const response = await fetch(url, options);
+    const data = await response.json();
+    console.log("ajillaj bn");
+  };
+
   return (
     <main className="grid grid-cols-2 h-screen">
       <div className="flex flex-col justify-center items-center gap-10">
@@ -16,20 +39,27 @@ export const Login = () => {
           <div className="font-semibold text-2xl">Welcome Back</div>
           <div>Welcome back, Please enter your details</div>
         </div>
-        <form className="flex flex-col w-[384px] gap-4">
+        <form className="flex flex-col w-[384px] gap-4" onSubmit={onSubmit}>
           <input
             className="w-full bg-slate-100 border rounded-lg p-3"
+            name="email"
             placeholder="E-mail"
-            type="text"
+            type="email"
           />
           <input
             className="w-full bg-slate-100 border rounded-lg p-3"
+            name="password"
             placeholder="Password"
             type="password"
           />
-          <button className="w-full bg-blue-600 rounded-2xl p-3 text-white font-semibold">
-            Log in
-          </button>
+          <Link href={"homepage"}>
+            <button
+              type="submit"
+              className="w-full bg-blue-600 rounded-2xl p-3 text-white font-semibold"
+            >
+              Log in
+            </button>
+          </Link>
         </form>
         <div className="flex gap-3">
           <div>Don't have account?</div>
