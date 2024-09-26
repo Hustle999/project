@@ -5,11 +5,7 @@ import { Register } from "../components/register/Register";
 export const SignUp = () => {
   return (
     <main>
-      <Link href="/">
-        <button>
-          <Register />;
-        </button>
-      </Link>
+      <Register />;
     </main>
   );
 };
