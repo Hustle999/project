@@ -3,19 +3,19 @@
 import Link from "next/link";
 
 export const Register = () => {
-  const url = "https://project-data-api.onrender.com/sign-up";
+  const url = "http://localhost:8888/sign-up";
   const onsubmit = async (e) => {
     e.preventDefault();
 
-    const user = {
-      username: e.target.Username.value,
-      mail: e.target.Email.value,
-      password: e.target.Password.value,
+    const newUser = {
+      name: e.target.name.value,
+      email: e.target.email.value,
+      password: e.target.password.value,
     };
-    const password = e.target.Password.value;
-    const rePassword = e.target.RePassword.value;
-    if (password !== rePassword) {
-      alert("Password is not matched");
+    const password = e.target.password.value;
+    const repassword = e.target.Repassword.value;
+    if (password !== repassword) {
+      alert("password is not matched");
       return;
     }
 
@@ -24,11 +24,12 @@ export const Register = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(user),
+      body: JSON.stringify(newUser),
     };
 
     const response = await fetch(url, options);
-    const data = response.json();
+    const data = await response.json();
+    console.log(data);
   };
 
   return (
@@ -44,36 +45,38 @@ export const Register = () => {
           <div className="font-semibold text-2xl">Create Geld account</div>
           <div>Sign up below to create your Wallet account</div>
         </div>
-        <form className="flex flex-col w-[384px] gap-4" onSubmit={onsubmit}>
+        <form
+          className="flex flex-col w-[384px] gap-4"
+          action=""
+          onSubmit={onsubmit}
+        >
           <input
             className="w-full bg-slate-100 border rounded-lg p-3"
-            name="Username"
-            placeholder="Username"
+            name="name"
+            placeholder="name"
             type="text"
           />
           <input
             className="w-full bg-slate-100 border rounded-lg p-3"
-            name="Email"
+            name="email"
             placeholder="E-mail"
             type="E-mail"
           />
           <input
             className="w-full bg-slate-100 border rounded-lg p-3"
-            name="Password"
-            placeholder="Password"
+            name="password"
+            placeholder="password"
             type="password"
           />
           <input
             className="w-full bg-slate-100 border rounded-lg p-3"
-            name="RePassword"
-            placeholder="Re-Password"
+            name="Repassword"
+            placeholder="Re-password"
             type="password"
           />
-          <Link href={"/"}>
-            <button className="w-full bg-blue-600 rounded-2xl p-3 text-white font-semibold">
-              Sign up
-            </button>
-          </Link>
+          <button className="w-full bg-blue-600 rounded-2xl p-3 text-white font-semibold">
+            Sign up
+          </button>
         </form>
         <div className="flex gap-3">
           <div>Already have account?</div>
