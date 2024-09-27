@@ -30,7 +30,6 @@ app.post("/sign-in", (request, response) => {
     const registeredUser = savedData.filter(
       (user) => user.name === name && user.password === password
     );
-
     if (registeredUser.length > 0) {
       response.json({
         success: true,
