@@ -3,6 +3,9 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import fs from "fs";
 import { error } from "console";
+import { neon } from "@neondatabase/serverless";
+import dotenv from "dotenv";
+dotenv.config();
 
 const port = 8888;
 const app = express();
@@ -10,9 +13,34 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get("/", (request, response) => {
-  response.send("Hello GET huselt irlee");
+const sql = neon(`${process.env.DATABASE_URL}`);
+
+const products = "/";
+const singleproduct = "/product/:id";
+const addItem = "/addItem/cart";
+const cartList = "/cart/lists";
+const order = "/order";
+const addNewProduct = "/addproduct";
+
+// 1. GET /products - Retrieve all products
+// 2. GET /products/{id} - Retrieve a specific product
+// 3. POST /cart - Add a product to the cart
+// 4. GET /cart - Retrieve the current cart
+// 5. POST /orders - Place a new order
+// 6. POST /products - Add a new product (admin only)
+
+app.get(products, async (request, response) => {
+  const sqlResponse = await sql`SELECT * FROM products`;
+  response.json({ data: sqlResponse, success: true });
 });
+
+app.get(singleproduct, async (request, response) => {
+  const id = 1;
+  const sqlResponse = await sql`SELECT * FROM products where id =${id}`;
+  response.json({ data: sqlResponse, success: true });
+});
+
+// LOGIN AND REGISTER
 
 app.post("/sign-in", (request, response) => {
   const { name, password } = request.body;

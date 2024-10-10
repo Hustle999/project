@@ -74,9 +74,11 @@ export const Register = () => {
             placeholder="Re-password"
             type="password"
           />
-          <button className="w-full bg-blue-600 rounded-2xl p-3 text-white font-semibold">
-            Sign up
-          </button>
+          <Link href={"/"}>
+            <button className="w-full bg-blue-600 rounded-2xl p-3 text-white font-semibold">
+              Sign up
+            </button>
+          </Link>
         </form>
         <div className="flex gap-3">
           <div>Already have account?</div>
