@@ -1,5 +1,13 @@
 "use client";
 
+import { Header } from "./Header";
+import { MainContainer } from "./main/MainContainer";
+
 export const Homepage = () => {
-  return <div>Home</div>;
+  return (
+    <div>
+      <Header />
+      <MainContainer />
+    </div>
+  );
 };
