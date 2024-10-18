@@ -16,7 +16,7 @@ app.use(cors());
 const sql = neon(`${process.env.DATABASE_URL}`);
 
 const products = "/";
-const singleproduct = "/product/:id";
+const singleproduct = "/product/{id}";
 const addItem = "/addItem/cart";
 const cartList = "/cart/lists";
 const order = "/order";
@@ -27,17 +27,52 @@ const addNewProduct = "/addproduct";
 // 3. POST /cart - Add a product to the cart
 // 4. GET /cart - Retrieve the current cart
 // 5. POST /orders - Place a new order
-// 6. POST /products - Add a new product (admin only)
+// 6. POST /products - Add a new product
 
 app.get(products, async (request, response) => {
   const sqlResponse = await sql`SELECT * FROM products`;
   response.json({ data: sqlResponse, success: true });
 });
 
-app.get(singleproduct, async (request, response) => {
-  const id = 1;
-  const sqlResponse = await sql`SELECT * FROM products where id =${id}`;
-  response.json({ data: sqlResponse, success: true });
+app.get("/product/:id", async (request, response) => {
+  const id = request.params.id; // Accessing the product ID
+  try {
+    const sqlResponse = await sql`SELECT * FROM products WHERE id = ${id}`;
+    if (sqlResponse.length === 0) {
+      return response
+        .status(404)
+        .json({ success: false, message: "Product not found" });
+    }
+    response.json({ data: sqlResponse[0], success: true }); // Return the first item
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+app.post(addNewProduct, async (request, response) => {
+  const { name, description, price, img_url } = request.body;
+
+  // Basic validation
+  if (!name || !description || !price) {
+    return response.status(400).json({
+      success: false,
+      error: "Name, description, and price are required.",
+    });
+  }
+
+  try {
+    const sqlResponse = await sql`
+      INSERT INTO products (name, description, price, img_url)
+      VALUES (${name}, ${description}, ${price}, ${img_url})
+      RETURNING *`;
+
+    // Return the newly created product
+    response.status(201).json({ data: sqlResponse, success: true });
+  } catch (error) {
+    console.error("Error inserting product:", error);
+    response.status(500).json({ success: false, error: error.message });
+  }
 });
 
 // LOGIN AND REGISTER
@@ -48,7 +83,7 @@ app.post("/sign-in", (request, response) => {
   fs.readFile("./data/user.json", "utf-8", (readError, data) => {
     if (readError) {
       response.json({
-        success: false,
+        success: true,
         error: error,
       });
     }
