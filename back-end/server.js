@@ -16,10 +16,11 @@ app.use(cors());
 const sql = neon(`${process.env.DATABASE_URL}`);
 
 const products = "/";
-const singleproduct = "/product/{id}";
+const singleproduct = "/product/:id";
 const addItem = "/addItem/cart";
 const cartList = "/cart/lists";
 const order = "/order";
+const editproduct = `/editproduct/:id`
 const addNewProduct = "/addproduct";
 
 // 1. GET /products - Retrieve all products
@@ -34,7 +35,7 @@ app.get(products, async (request, response) => {
   response.json({ data: sqlResponse, success: true });
 });
 
-app.get("/product/:id", async (request, response) => {
+app.get(singleproduct, async (request, response) => {
   const id = request.params.id; // Accessing the product ID
   try {
     const sqlResponse = await sql`SELECT * FROM products WHERE id = ${id}`;
@@ -51,26 +52,55 @@ app.get("/product/:id", async (request, response) => {
 });
 
 app.post(addNewProduct, async (request, response) => {
-  const { name, description, price, img_url } = request.body;
+  const { name, description, price, imgurl } = request.body; // Keep as is if you use imgurl in frontend
 
   // Basic validation
-  if (!name || !description || !price) {
+  if (!name || !description || !price || !imgurl) {
     return response.status(400).json({
       success: false,
-      error: "Name, description, and price are required.",
+      error: "Name, description, price, and img_url are required.",
     });
   }
 
   try {
     const sqlResponse = await sql`
-      INSERT INTO products (name, description, price, img_url)
-      VALUES (${name}, ${description}, ${price}, ${img_url})
-      RETURNING *`;
+      INSERT INTO products (name, description, price, imgurl)
+      VALUES (${name}, ${description}, ${price}, ${imgurl})`;
 
     // Return the newly created product
     response.status(201).json({ data: sqlResponse, success: true });
   } catch (error) {
     console.error("Error inserting product:", error);
+    response.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.put(editproduct, async (request, response) => {
+  const { id } = request.params;
+  const { name, description, price, imgurl } = request.body;
+
+  // Basic validation
+  if (!name || !description || !price || !imgurl) {
+    return response.status(400).json({
+      success: false,
+      error: "Name, description, price, and img_url are required.",
+    });
+  }
+
+  try {
+    const sqlResponse = await sql`
+      UPDATE products
+      SET name = ${name}, description = ${description}, price = ${price}, imgurl = ${imgurl}
+      WHERE id = ${id}
+      RETURNING *`;
+
+    if (sqlResponse.length === 0) {
+      return response.status(404).json({ success: false, message: "Product not found" });
+    }
+
+    response.status(200).json({ data: sqlResponse[0], success: true });
+  } catch (error) {
+    console.error("Error updating product:", error);
     response.status(500).json({ success: false, error: error.message });
   }
 });

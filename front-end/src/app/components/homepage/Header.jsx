@@ -1,14 +1,17 @@
+"use client";
+import Link from "next/link";
+
 import { Cart } from "./main/components/Svgrepo";
 
 export const Header = () => {
   return (
     <div className="flex flex-col w-full fixed z-10 bg-white">
       <header className="flex justify-between px-[100px] py-4 ">
-        <div className="flex gap-8 items-center">
+        <Link className="flex gap-8 items-center" href={"/homepage"}>
           <img width={30} height={30} src="/Vector.png" alt="" />
           <div>Dashboard</div>
           <div>Products</div>
-        </div>
+        </Link>
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-2 rounded-2xl bg-blue-600 px-4 py-1 text-white ">
             <div>- Your Cart</div>
@@ -21,7 +24,7 @@ export const Header = () => {
               className="rounded-full"
               width={50}
               height={50}
-              src="./ProfilePic.jpeg"
+              src="../ProfilePic.jpeg"
               alt=""
             />
           </div>

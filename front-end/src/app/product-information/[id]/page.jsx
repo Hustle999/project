@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Header } from "@/app/components/homepage/Header";
 
 export default function ProductDetail({ params }) {
   const id = params.id;
@@ -36,11 +37,39 @@ export default function ProductDetail({ params }) {
   if (!product) return <div>No product found.</div>;
 
   return (
-    <div className="">
-      <h1>{product.name}</h1>
-      {product.imgurl && <img src={product.imgurl} alt={product.name} />}
-      <p>{product.description}</p>
-      <p>Price: ${product.price}</p>
+    <div>
+      <Header />
+      <div className="flex flex-col items-center pt-[200px] px-[100px]  bg-slate-100 h-screen">
+        <div>
+          <h1 className="flex justify-center text-6xl">{product.name}</h1>
+          <div className="grid grid-cols-2 gap-10 mt-10">
+            <div className="flex m-auto h-[500px]">
+              {product.imgurl && (
+                <img
+                  className="rounded-2xl"
+                  src={product.imgurl}
+                  alt={product.name}
+                />
+              )}
+            </div>
+            <div className="flex flex-col justify-between pr-[300px]">
+              <div className="flex flex-col gap-10">
+                <p className="text-2xl font-semibold">Description</p>
+                <p className="text-2xl text-slate-600">{product.description}</p>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <p className="text-2xl font-semibold">
+                  Price: $ {product.price}
+                </p>
+                <button className="bg-blue-600 text-white p-2 rounded-md">
+                  Add to cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
