@@ -20,8 +20,9 @@ const singleproduct = "/product/:id";
 const addItem = "/addItem/cart";
 const cartList = "/cart/lists";
 const order = "/order";
-const editproduct = `/editproduct/:id`
+const editproduct = `/editproduct/:id`;
 const addNewProduct = "/addproduct";
+const deleteProduct = "/deleteproduct/:id";
 
 // 1. GET /products - Retrieve all products
 // 2. GET /products/{id} - Retrieve a specific product
@@ -95,12 +96,38 @@ app.put(editproduct, async (request, response) => {
       RETURNING *`;
 
     if (sqlResponse.length === 0) {
-      return response.status(404).json({ success: false, message: "Product not found" });
+      return response
+        .status(404)
+        .json({ success: false, message: "Product not found" });
     }
 
     response.status(200).json({ data: sqlResponse[0], success: true });
   } catch (error) {
     console.error("Error updating product:", error);
+    response.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.delete(deleteProduct, async (request, response) => {
+  const { id } = request.params;
+
+  try {
+    const sqlResponse = await sql`
+      DELETE FROM products
+      WHERE id = ${id}
+      RETURNING *`;
+
+    if (sqlResponse.length === 0) {
+      return response
+        .status(404)
+        .json({ success: false, message: "Product not found" });
+    }
+
+    response
+      .status(200)
+      .json({ success: true, message: "Product deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting product:", error);
     response.status(500).json({ success: false, error: error.message });
   }
 });

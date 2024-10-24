@@ -10,6 +10,33 @@ export const Products = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
+  const handleDelete = async (id) => {
+    if (
+      confirm(
+        "Are you sure you want to delete this product? This action cannot be undone."
+      )
+    ) {
+      try {
+        const response = await axios.delete(
+          `http://localhost:8888/deleteproduct/${id}`
+        );
+        if (response.data.success) {
+          setProducts((prevProducts) =>
+            prevProducts.filter((prod) => prod.id !== id)
+          );
+          alert("Product deleted successfully!");
+        } else {
+          alert("Error deleting product: " + response.data.error);
+        }
+      } catch (error) {
+        console.error("Error deleting product:", error);
+        alert(
+          "An error occurred while deleting the product. Please try again."
+        );
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -38,24 +65,28 @@ export const Products = () => {
       price: selectedProduct.price,
       imgurl: selectedProduct.imgurl,
     };
-  
+
     try {
-      const response = await axios.put(`http://localhost:8888/editproduct/${selectedProduct.id}`, updatedProduct);
+      const response = await axios.put(
+        `http://localhost:8888/editproduct/${selectedProduct.id}`,
+        updatedProduct
+      );
       if (response.data.success) {
-        // Update the products list with the modified product
         setProducts((prevProducts) =>
-          prevProducts.map((prod) => (prod.id === selectedProduct.id ? response.data.data : prod))
+          prevProducts.map((prod) =>
+            prod.id === selectedProduct.id ? response.data.data : prod
+          )
         );
-        alert('Product updated successfully!');
+        alert("Product updated successfully!");
       } else {
-        alert('Error updating product: ' + response.data.error);
+        alert("Error updating product: " + response.data.error);
       }
     } catch (error) {
-      console.error('Error updating product:', error);
-      alert('Error updating product');
+      console.error("Error updating product:", error);
+      alert("Error updating product");
     } finally {
       setModalOpen(false);
-      setSelectedProduct(null); // Clear the selected product
+      setSelectedProduct(null);
     }
   };
 
@@ -69,7 +100,10 @@ export const Products = () => {
     <>
       <ul className="grid 2xl:grid-cols-4 gap-10 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 items-center">
         {products.map((product) => (
-          <li key={product.id} className="flex flex-col rounded-2xl p-5 bg-white drop-shadow-2xl h-[600px]">
+          <li
+            key={product.id}
+            className="flex flex-col rounded-2xl p-5 bg-white drop-shadow-2xl h-[600px]"
+          >
             {product.imgurl && (
               <Link href={`/product-information/${product.id}`}>
                 <div className="flex justify-center">
@@ -97,8 +131,8 @@ export const Products = () => {
                   <button className="bg-blue-600 text-white p-2 rounded-md">
                     Add to cart
                   </button>
-                  <button 
-                    className="bg-blue-600 text-white px-5 py-2 rounded-md" 
+                  <button
+                    className="bg-blue-600 text-white px-5 py-2 rounded-md"
                     onClick={() => handleEditClick(product)}
                   >
                     Edit
@@ -121,7 +155,12 @@ export const Products = () => {
                   className="bg-slate-200 w-full rounded-lg py-2 px-1"
                   type="text"
                   value={selectedProduct.name}
-                  onChange={(e) => setSelectedProduct({ ...selectedProduct, name: e.target.value })}
+                  onChange={(e) =>
+                    setSelectedProduct({
+                      ...selectedProduct,
+                      name: e.target.value,
+                    })
+                  }
                   required
                 />
               </div>
@@ -131,7 +170,12 @@ export const Products = () => {
                   className="bg-slate-200 w-full rounded-lg py-2 px-1"
                   type="text"
                   value={selectedProduct.imgurl}
-                  onChange={(e) => setSelectedProduct({ ...selectedProduct, imgurl: e.target.value })}
+                  onChange={(e) =>
+                    setSelectedProduct({
+                      ...selectedProduct,
+                      imgurl: e.target.value,
+                    })
+                  }
                   required
                 />
               </div>
@@ -141,7 +185,12 @@ export const Products = () => {
                   className="bg-slate-200 w-full rounded-lg py-2 px-1"
                   type="text"
                   value={selectedProduct.description}
-                  onChange={(e) => setSelectedProduct({ ...selectedProduct, description: e.target.value })}
+                  onChange={(e) =>
+                    setSelectedProduct({
+                      ...selectedProduct,
+                      description: e.target.value,
+                    })
+                  }
                   required
                 />
               </div>
@@ -151,15 +200,34 @@ export const Products = () => {
                   className="bg-slate-200 w-full rounded-lg py-2 px-1"
                   type="number"
                   value={selectedProduct.price}
-                  onChange={(e) => setSelectedProduct({ ...selectedProduct, price: e.target.value })}
+                  onChange={(e) =>
+                    setSelectedProduct({
+                      ...selectedProduct,
+                      price: e.target.value,
+                    })
+                  }
                   required
                 />
               </div>
               <div className="flex justify-between pt-10">
-                <button type="submit" className="bg-blue-600 px-4 w-[120px] py-2 text-white rounded-xl">
+                <button
+                  type="submit"
+                  className="bg-blue-600 px-4 w-[120px] py-2 text-white rounded-xl"
+                >
                   Update
                 </button>
-                <button type="button" className="bg-slate-700 px-4 w-[120px] py-2 text-white rounded-xl" onClick={() => setModalOpen(false)}>
+                <button
+                  type="button"
+                  className="bg-red-600 px-4 w-[120px] py-2 text-white rounded-xl"
+                  onClick={() => handleDelete(selectedProduct.id)}
+                >
+                  Delete
+                </button>
+                <button
+                  type="button"
+                  className="bg-slate-700 px-4 w-[120px] py-2 text-white rounded-xl"
+                  onClick={() => setModalOpen(false)}
+                >
                   Close
                 </button>
               </div>
