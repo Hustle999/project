@@ -31,7 +31,12 @@ export default function ProductDetail({ params }) {
 
   if (loading)
     return (
-      <span className="w-full h-screen flex justify-center items-center loading loading-bars"></span>
+      <div className="flex w-full flex-col justify-between h-[600px] gap-4">
+        <div className="skeleton h-[300px] w-full"></div>
+        <div className="skeleton h-20 w-28"></div>
+        <div className="skeleton h-20 w-full"></div>
+        <div className="skeleton h-10 w-full"></div>
+      </div>
     );
   if (error) return <div>Error: {error}</div>;
   if (!product) return <div>No product found.</div>;

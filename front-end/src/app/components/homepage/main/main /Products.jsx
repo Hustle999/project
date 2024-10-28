@@ -92,7 +92,32 @@ export const Products = () => {
 
   if (loading)
     return (
-      <span className="flex justify-center items-center loading loading-bars loading-lg"></span>
+      <span className="grid 2xl:grid-cols-4 gap-10 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 items-center">
+        <div className="flex w-full flex-col justify-between h-[600px] gap-4">
+          <div className="skeleton h-[300px] w-full"></div>
+          <div className="skeleton h-20 w-28"></div>
+          <div className="skeleton h-20 w-full"></div>
+          <div className="skeleton h-10 w-full"></div>
+        </div>
+        <div className="flex w-full flex-col justify-between h-[600px] gap-4">
+          <div className="skeleton h-[300px] w-full"></div>
+          <div className="skeleton h-10 w-28"></div>
+          <div className="skeleton h-20 w-full"></div>
+          <div className="skeleton h-10 w-full"></div>
+        </div>
+        <div className="flex w-full flex-col justify-between h-[600px] gap-4">
+          <div className="skeleton h-[300px] w-full"></div>
+          <div className="skeleton h-20 w-28"></div>
+          <div className="skeleton h-20 w-full"></div>
+          <div className="skeleton h-10 w-full"></div>
+        </div>
+        <div className="flex w-full flex-col justify-between h-[600px] gap-4">
+          <div className="skeleton h-[300px] w-full"></div>
+          <div className="skeleton h-20 w-28"></div>
+          <div className="skeleton h-20 w-full"></div>
+          <div className="skeleton h-10 w-full"></div>
+        </div>
+      </span>
     );
   if (error) return <div>Error: {error}</div>;
 
