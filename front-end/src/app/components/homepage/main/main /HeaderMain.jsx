@@ -129,7 +129,7 @@ export const HeaderMain = () => {
           <dialog open className="modal">
             <div className="modal-box">
               <h3 className="font-bold text-lg">
-                Please insert your product data following the texts
+                Please insert your product data following the requirements
               </h3>
               <form onSubmit={handleSubmit} className="flex flex-col pt-5 gap-5">
                 <div className="flex flex-col gap-2">
