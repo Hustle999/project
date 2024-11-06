@@ -17,9 +17,6 @@ const sql = neon(`${process.env.DATABASE_URL}`);
 
 const products = "/";
 const singleproduct = "/product/:id";
-const addItem = "/addItem/cart";
-const cartList = "/cart/lists";
-const order = "/order";
 const editproduct = `/editproduct/:id`;
 const addNewProduct = "/addproduct";
 const deleteProduct = "/deleteproduct/:id";
